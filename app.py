@@ -43,7 +43,20 @@ def fetch_stock_data_and_resample(symbol, exchange, n_bars, htf_interval, interv
             stock_data.index = stock_data.index.tz_localize('UTC').tz_convert('Asia/Kolkata')
 
             df = stock_data.round(2)
-            
+
+            # Map display names to resample keys
+            interval_to_resample_key = {
+                '10 Minutes': 'in_10_minute',
+                '75 Minutes': 'in_75_minute',
+                '125 Minutes': 'in_125_minute',
+                '4 Hours': 'in_4_hour',
+                '5 Hours': 'in_5_hour',
+                '6 Hours': 'in_6_hour',
+                '8 Hours': 'in_8_hour',
+                '10 Hours': 'in_10_hour',
+                '12 Hours': 'in_12_hour'
+            }
+
             resample_rules = {
             'in_10_minute': '10min',
             'in_75_minute': '75min',
@@ -55,10 +68,12 @@ def fetch_stock_data_and_resample(symbol, exchange, n_bars, htf_interval, interv
             'in_10_hour': '10h',
             'in_12_hour': '12h',            }
 
-            rule = resample_rules.get(interval_key)
+            # Convert display name to resample key
+            resample_key = interval_to_resample_key.get(interval_key, interval_key)
+            rule = resample_rules.get(resample_key)
             if rule is None:
-                print(f"Warning: No resample rule found for key '{key}'.")
-                return None, None  # Exit if no valid rule is found
+                print(f"Warning: No resample rule found for key '{interval_key}'.")
+                return None  # Exit if no valid rule is found
 
             df = df.resample(rule=rule, closed='left', label='left', origin=df.index.min()).agg(
                 OrderedDict([
@@ -75,11 +90,11 @@ def fetch_stock_data_and_resample(symbol, exchange, n_bars, htf_interval, interv
             return stock_data
         else:
             print(f"No high time frame data found for {symbol} on {exchange}.")
-            return None, None  # Return None if no data is found
-            
+            return None  # Return None if no data is found
+
     except Exception as e:
         print(f"Error fetching data for {symbol}: {e}")
-        return None, None  # Return None in case of an error
+        return None  # Return None in case of an error
 
 
 def fetch_stock_data(symbol, exchange, n_bars, htf_interval, interval,fut_contract):
