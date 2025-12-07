@@ -48,6 +48,7 @@ def fetch_stock_data_and_resample(symbol, exchange, n_bars, htf_interval, interv
             'in_10_minute': '10min',
             'in_75_minute': '75min',
             'in_125_minute': '125min',
+            'in_4_hour': '4h',
             'in_5_hour': '5h',
             'in_6_hour': '6h',
             'in_8_hour': '8h',
@@ -223,7 +224,9 @@ def validate_time_condition(legoutDate, entry_date, interval_key):
         '3 Minutes': timedelta(minutes=75),
         '5 Minutes': timedelta(minutes=75),
         '10 Minutes': timedelta(days=1),
-        '15 Minutes': timedelta(days=1)
+        '15 Minutes': timedelta(days=1),
+        '125 Minutes': timedelta(hours=12),
+        '4 Hours': timedelta(days=3)
     }
     
     # Get the required time delay for the given interval key
@@ -1045,11 +1048,11 @@ interval_options = {
     '30 Minutes': Interval.in_30_minute,
     #'45 Minutes': Interval.in_45_minute,
     #'75 Minutes': Interval.in_15_minute,
-    #'125 Minutes': Interval.in_5_minute,
+    '125 Minutes': Interval.in_5_minute,
     '1 Hour': Interval.in_1_hour,
     '2 Hours': Interval.in_2_hour,
     #'3 Hours': Interval.in_3_hour,
-    #'4 Hours': Interval.in_4_hour,
+    '4 Hours': Interval.in_4_hour,
     #'5 Hours': Interval.in_1_hour,
     #'6 Hours': Interval.in_3_hour,
     #'8 Hours': Interval.in_4_hour,
